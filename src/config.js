@@ -2,7 +2,6 @@ function generateScriptConfig() {
   window.storyMapsEmbedConfig = {
       storyId: "2c5879f192a648049d032412b1b2701c",
       rootNode: ".storymaps-root",
-      topOffset: "3rem",
   };
 }
 
