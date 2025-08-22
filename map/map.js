@@ -15,7 +15,7 @@ const resetButton = document.querySelector("#reset-button");
 // Define a the mapping between slides and time ranges
 const choreographyMapping = {
   "#slide1": {
-    trackLayer: "Osprey Points",
+    trackLayer: "Osprey Points Feature",
     trackField: "tag_local_identifier",
     trackLabelField: "event_id",
     trackLabelIds: ["1828224806", "1999613313", "2012515059", "2017197455"],
@@ -39,8 +39,8 @@ const choreographyMapping = {
     }],
     timeSliderStart: "2016-08-15T00:00:00Z",
     timeSliderEnd: "2016-11-21T00:00:00Z",
-    timeSliderUnit: "hours",
-    timeSliderStep: 6
+    timeSliderUnit: "days",
+    timeSliderStep: 3
   }
 }
 
@@ -55,13 +55,13 @@ mapElement.addEventListener("arcgisViewReadyChange", (event) => {
     // Access the MapView from the arcgis-map component
     const view = mapElement.view;
 
-    // Disable map navigation
-    view.on("mouse-wheel", (event) => {
-      event.stopPropagation();
-    });
-    view.on("drag", (event) => {
-      event.stopPropagation();
-    });
+    // // Disable map navigation
+    // view.on("mouse-wheel", (event) => {
+    //   event.stopPropagation();
+    // });
+    // view.on("drag", (event) => {
+    //   event.stopPropagation();
+    // });
 
   function adjustMapPadding(view) {
     // Define your desktop breakpoint (e.g., 1024px)
@@ -143,8 +143,8 @@ mapElement.addEventListener("arcgisViewReadyChange", (event) => {
                 symbol: {
                   type: "simple-marker",
                   style: "circle",
-                  color: "White",
-                  size: 10,
+                  color: "Yellow",
+                  size: 15,
                   outline: {
                     color: "black",
                     width: 2
@@ -193,8 +193,8 @@ mapElement.addEventListener("arcgisViewReadyChange", (event) => {
                 type: "simple",
                 symbol: {
                   type: "simple-line",
-                  color: "black",
-                  width: 2.5
+                  color: "Orange",
+                  width: 4
                 }
               }
             }
