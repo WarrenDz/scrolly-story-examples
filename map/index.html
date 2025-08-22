@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>route-animation</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.33/"></script>
+  <!-- Load Calcite components from CDN -->
+  <script type="module" src="https://js.arcgis.com/calcite-components/3.1.0/calcite.esm.js"></script>
+  <!-- Load the ArcGIS Maps SDK for JavaScript from CDN -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+  <!-- Load Map components from CDN-->
+  <script
+    type="module"
+    src="https://js.arcgis.com/map-components/4.33/arcgis-map-components.esm.js"
+  ></script>
+  <script type="module" src="/map.js"></script>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    arcgis-map {
+      height: 100%;
+      width: 100%;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    #reset-button {
+      position: absolute;
+      bottom: 70px;
+      right: 15px;
+      z-index: 10;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+  
+    <arcgis-map item-id="c781cac63dd74bb8a97df50aabb7adf5" zoom="3" center="-79.443989, 28.9169625">
+      
+      <arcgis-expand position="bottom-right" mode="floating">
+        <calcite-button id="reset-button" label="Reset animation" appearance="outline-fill" icon-start="reset" kind="neutral">
+        </calcite-button>
+        <arcgis-time-slider mode="cumulative-from-start" play-rate="1000" reference-element="arcgis-map"></arcgis-time-slider>
+      </arcgis-expand>
+    </arcgis-map>
+  </div>
+</body>
+</html>
+
+
