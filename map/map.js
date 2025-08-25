@@ -22,7 +22,7 @@ async function initialize() {
 }
 
 async function loadMapChoreography() {
-  const response = await fetch("src/mapChoreography.json");
+  const response = await fetch("/mapChoreography.json");
   return await response.json();
 }
 

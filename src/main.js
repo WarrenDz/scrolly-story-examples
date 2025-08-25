@@ -74,7 +74,7 @@ const createIframeSrcObserver = (iframe) => {
 // Set up observers and listeners for docking, iframe changes, and scroll events.
 async function initialize() {
   // Load the map choreography data
-  const response = await fetch("/src/mapChoreography.json");
+  const response = await fetch("/mapChoreography.json");
   mapChoreo = await response.json();
   setupDockingObserver();
   watchForIframeForever();
