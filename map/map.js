@@ -15,7 +15,7 @@ const resetButton = document.querySelector("#reset-button");
 let mapChoreography = [];
 
 async function initialize() {
-  mapChoreography = await loadRouteSegments();
+  mapChoreography = await loadMapChoreography();
   setupMessageListener();
   setupHashListener();
   processHash();
