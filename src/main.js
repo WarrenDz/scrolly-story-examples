@@ -221,6 +221,8 @@ function interpolateMapExtent(progress, slide) {
   const choreo = mapChoreo[slide];
   const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
   const from = choreo.viewpoint;
+  log("From viewpoint:", from);
+  log("from viewpoint dict:", choreo["viewpoint"]);
   const to = mapChoreo[nextIndex].viewpoint;
   log("Interpolating extent from:", from, "to:", to, "progress:", progress);
   const interpolate = (fromVal, toVal) =>
