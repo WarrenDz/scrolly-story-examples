@@ -216,8 +216,8 @@ function interpolateTimeSlider(progress, slide) {
   // timeSlider.setPosition(slide, progress);
 }
 
-// Function to interpolate  between map bookmarks
-function interpolateMapBookmark(progress, slide) {
+// Function to interpolate  between map extents
+function interpolateMapExtent(progress, slide) {
   const choreo = mapChoreo[slide];
   const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
   const from = choreo.result;
@@ -235,17 +235,12 @@ function interpolateMapBookmark(progress, slide) {
     },
   };
   iframe.contentWindow.postMessage(
-    { source: "storymap-controller", payload: { type: "camera", ...camera } },
+    { source: "storymap-controller", payload: { type: "viewpoint", viewpoint } },
     "*"
   );
 }
 
-function interpolateMapExtent(progress, slide) {
-  // Example: update map extent/bookmarks
-  // map.setExtent(...);
-}
-
 // Register all interpolation functions you want to run
-const interpolators = [interpolateMapBookmark];
+const interpolators = [interpolateMapExtent];
 
 initialize();
