@@ -5,7 +5,8 @@
 // -- This would facilitate choreography sequences spread across multiple sidecars.
 // -- Ultimately, this would also allow for the js to contain more of the logic, rather than the unique configuration.
 const rootSelector = "#n-wrgjVr";
-const targetSelectorDocked = "#n-wrgjVr > div > div[class*='jsx-'][class*='container'][class*='partial-screen'][class*='main']";
+const targetSelectorDocked =
+  "#n-wrgjVr > div > div[class*='jsx-'][class*='container'][class*='partial-screen'][class*='main']";
 const iframeSelector = "#n-wrgjVr iframe";
 
 // --- Shared state ---
@@ -177,10 +178,9 @@ function setupScrollListener(onProgress) {
   });
 }
 
-
 // Generic interpolation runner
 function runInterpolations(interpolators, progress, slide) {
-  interpolators.forEach(fn => {
+  interpolators.forEach((fn) => {
     if (typeof fn === "function") {
       fn(progress, slide);
     }
@@ -193,7 +193,8 @@ function interpolateCamera(progress, slide) {
   const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
   const from = choreo.result;
   const to = mapChoreo[nextIndex].result;
-  const interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
+  const interpolate = (fromVal, toVal) =>
+    fromVal + (toVal - fromVal) * progress;
   const camera = {
     x: interpolate(from.x, to.x),
     y: interpolate(from.y, to.y),
@@ -215,14 +216,14 @@ function interpolateTimeSlider(progress, slide) {
   // timeSlider.setPosition(slide, progress);
 }
 
-
 // Function to interpolate  between map bookmarks
 function interpolateMapBookmark(progress, slide) {
   const choreo = mapChoreo[slide];
   const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
   const from = choreo.result;
   const to = mapChoreo[nextIndex].result;
-  const interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
+  const interpolate = (fromVal, toVal) =>
+    fromVal + (toVal - fromVal) * progress;
   const viewpoint = {
     scale: interpolate(from.scale, to.scale),
     rotation: interpolate(from.rotation, to.rotation),
@@ -231,17 +232,13 @@ function interpolateMapBookmark(progress, slide) {
       ymin: interpolate(from.ymin, to.ymin),
       xmax: interpolate(from.xmax, to.xmax),
       ymax: interpolate(from.ymax, to.ymax),
-    }
+    },
   };
   iframe.contentWindow.postMessage(
-    {
-      source: 'storymap-controller',
-      payload: camera
-    }, 
-    '*'
+    { source: "storymap-controller", payload: { type: "camera", ...camera } },
+    "*"
   );
 }
-
 
 function interpolateMapExtent(progress, slide) {
   // Example: update map extent/bookmarks
@@ -249,8 +246,6 @@ function interpolateMapExtent(progress, slide) {
 }
 
 // Register all interpolation functions you want to run
-const interpolators = [
-  interpolateMapBookmark
-];
+const interpolators = [interpolateMapBookmark];
 
 initialize();
