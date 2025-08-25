@@ -11,9 +11,9 @@ const rootSelector = "#n-wrgjVr";
 // const iframeSelector = "#n-wrgjVr iframe";
 
 const targetSelectorDocked =
-  "#n-wrgjVr > div > div.jsx-3078892564.jsx-1282213000.container.partial-screen.main";
+  "#n-wrgjVr > div > div.jsx-2592556314.jsx-1282213000.container.partial-screen.main";
 const iframeSelector =
-  "#n-wrgjVr > div > div.jsx-3078892564.jsx-1282213000.container.partial-screen.docked.show-shadow.main > div > div > div > figure > div > div > div > iframe";
+  "#n-wrgjVr > div > div.jsx-2592556314.jsx-1282213000.container.partial-screen.docked.show-shadow.main > div > div > div > figure > div > div > div > iframe";
 
 // --- Shared state ---
 // This file contains shared state variables used across the scroll-driven story map
