@@ -5,9 +5,15 @@
 // -- This would facilitate choreography sequences spread across multiple sidecars.
 // -- Ultimately, this would also allow for the js to contain more of the logic, rather than the unique configuration.
 const rootSelector = "#n-wrgjVr";
+
+// const targetSelectorDocked =
+//   "#n-wrgjVr > div > div[class*='jsx-'][class*='container'][class*='partial-screen'][class*='main']";
+// const iframeSelector = "#n-wrgjVr iframe";
+
 const targetSelectorDocked =
-  "#n-wrgjVr > div > div[class*='jsx-'][class*='container'][class*='partial-screen'][class*='main']";
-const iframeSelector = "#n-wrgjVr iframe";
+  "#n-wrgjVr > div > div.jsx-3078892564.jsx-1282213000.container.partial-screen.main";
+const iframeSelector =
+  "#n-wrgjVr > div > div.jsx-3078892564.jsx-1282213000.container.partial-screen.docked.show-shadow.main > div > div > div > figure > div > div > div > iframe";
 
 // --- Shared state ---
 // This file contains shared state variables used across the scroll-driven story map
@@ -147,6 +153,7 @@ function getPanelProgress(panels, currentSlide, scrollY) {
 // Sets up a scroll listener that tracks the user's scroll position and updates the current slide's progress.
 function setupScrollListener(onProgress) {
   window.addEventListener("scroll", () => {
+    console.log("Scroll event fired"); // Add this line
     const currentScroll = window.scrollY;
     scrollDirection =
       currentScroll > lastScrollY
@@ -168,14 +175,6 @@ function setupScrollListener(onProgress) {
   });
 }
 
-// Generic interpolation runner
-function runInterpolations(interpolators, progress, slide) {
-  interpolators.forEach((fn) => {
-    if (typeof fn === "function") {
-      fn(progress, slide);
-    }
-  });
-}
 
 // Example interpolation functions
 function interpolateCamera(progress, slide) {
@@ -212,7 +211,6 @@ function interpolateMapExtent(progress, slide) {
   const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
   const from = choreo.viewpoint;
   log("From viewpoint:", from);
-  log("from viewpoint dict:", choreo["viewpoint"]);
   const to = mapChoreo[nextIndex].viewpoint;
   log("Interpolating extent from:", from, "to:", to, "progress:", progress);
   const interpolate = (fromVal, toVal) =>
@@ -236,6 +234,16 @@ function interpolateMapExtent(progress, slide) {
 // Register all interpolation functions you want to run
 const interpolators = [interpolateMapExtent];
 
+// Generic interpolation runner
+function runInterpolations(interpolators, progress, slide) {
+  console.log("runInterpolations called", { progress, slide });
+  interpolators.forEach((fn) => {
+    if (typeof fn === "function") {
+      fn(progress, slide);
+    }
+  });
+}
+
 // Set up observers and listeners for docking, iframe changes, and scroll events.
 async function initialize() {
   // Load the map choreography data
@@ -243,7 +251,6 @@ async function initialize() {
   mapChoreo = await response.json();
   setupDockingObserver();
   watchForIframeForever();
-  setupScrollListener();
 
   // Call interpolations on scroll progress
   setupScrollListener((progress, slide) => {
