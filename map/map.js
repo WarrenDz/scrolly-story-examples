@@ -1,3 +1,4 @@
+import Extent from "https://js.arcgis.com/4.26/@arcgis/core/geometry/Extent.js";
 // Set DEBUG to true to enable debug logging
 const DEBUG = true;
 
@@ -15,53 +16,53 @@ const resetButton = document.querySelector("#reset-button");
 // Hardcoding this for now
 let mapChoreography = [
   {
-    "viewpoint": {
-      "rotation": 0,
-      "scale": 1155581.108577,
-      "targetGeometry": {
-        "spatialReference": {
-          "latestWkid": 3857,
-          "wkid": 102100
+    viewpoint: {
+      rotation: 0,
+      scale: 1155581.108577,
+      targetGeometry: {
+        spatialReference: {
+          latestWkid: 3857,
+          wkid: 102100,
         },
-        "xmin": -9480987.971538901,
-        "ymin": 4993703.648371119,
-        "xmax": -9043156.673521623,
-        "ymax": 5272545.927555308
-      }
-    }
+        xmin: -9480987.971538901,
+        ymin: 4993703.648371119,
+        xmax: -9043156.673521623,
+        ymax: 5272545.927555308,
+      },
+    },
   },
   {
-    "viewpoint": {
-      "rotation": 0,
-      "scale": 18489297.737236,
-      "targetGeometry": {
-        "spatialReference": {
-          "latestWkid": 3857,
-          "wkid": 102100
+    viewpoint: {
+      rotation: 0,
+      scale: 18489297.737236,
+      targetGeometry: {
+        spatialReference: {
+          latestWkid: 3857,
+          wkid: 102100,
         },
-        "xmin": -12315034.114639107,
-        "ymin": 940916.8624067632,
-        "xmax": -5309733.346361135,
-        "ymax": 5402393.329354744
-      }
-    }
+        xmin: -12315034.114639107,
+        ymin: 940916.8624067632,
+        xmax: -5309733.346361135,
+        ymax: 5402393.329354744,
+      },
+    },
   },
   {
-    "viewpoint": {
-      "rotation": 0,
-      "scale": 1155581.108577,
-      "targetGeometry": {
-        "spatialReference": {
-          "latestWkid": 3857,
-          "wkid": 102100
+    viewpoint: {
+      rotation: 0,
+      scale: 1155581.108577,
+      targetGeometry: {
+        spatialReference: {
+          latestWkid: 3857,
+          wkid: 102100,
         },
-        "xmin": -8195493.916410449,
-        "ymin": 1037891.5647293258,
-        "xmax": -7757662.618393171,
-        "ymax": 1316733.8439135144
-      }
-    }
-  }
+        xmin: -8195493.916410449,
+        ymin: 1037891.5647293258,
+        xmax: -7757662.618393171,
+        ymax: 1316733.8439135144,
+      },
+    },
+  },
 ];
 
 // Load the map choreography data from a JSON file
@@ -128,6 +129,11 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
       case "extent":
         if (view && payload.extent) {
           view.goTo(payload.extent, { animate: true, duration: 250 });
+        }
+        break;
+      case "viewpoint":
+        if (view && payload.viewpoint) {
+          view.goTo(payload.viewpoint, { animate: true, duration: 2500 });
         }
         break;
       case "bookmark":
@@ -201,8 +207,20 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     // // Viewpoint/extent
     if (mapChoreo.viewpoint) {
       const viewpoint = mapChoreo.viewpoint;
-      log("Setting viewpoint:", viewpoint);
-      view.goTo(viewpoint, { animate: true, duration: 2500 });
+      // log("Setting viewpoint:", viewpoint);
+      // view.goTo(viewpoint, { animate: true, duration: 2500 });
+      // Navigate to the viewpoint after the view is ready
+      log("Navigating to viewpoint...");
+      const extent = new Extent({
+        xmin: -8195493.916410449,
+        ymin: 1037891.5647293258,
+        xmax: -7757662.618393171,
+        ymax: 1316733.8439135144,
+        spatialReference: { wkid: 102100 },
+      });
+      view.goTo(extent).catch((error) => {
+        console.error("goTo error:", error);
+      });
     }
 
     // // Time slider
