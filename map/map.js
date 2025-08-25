@@ -22,7 +22,7 @@ async function initialize() {
 }
 
 async function loadMapChoreography() {
-  const response = await fetch("/mapChoreography.json");
+  const response = await fetch("../public/mapChoreography.json");
   return await response.json();
 }
 
@@ -32,7 +32,7 @@ mapElement.addEventListener("arcgisViewReadyChange", (event) => {
   if (event.target.ready) {
     // Assign a previous hash variable to store the last hash
     let previousHash = null;
-    let hash = window.location.hash || "#slide1"; // if no has is present use #slide1
+    let hash = window.location.hash || "#0"; // if no has is present use #slide1
 
     // Access the MapView from the arcgis-map component
     const view = mapElement.view;
