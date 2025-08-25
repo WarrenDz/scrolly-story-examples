@@ -220,8 +220,9 @@ function interpolateTimeSlider(progress, slide) {
 function interpolateMapExtent(progress, slide) {
   const choreo = mapChoreo[slide];
   const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
-  const from = choreo.result;
-  const to = mapChoreo[nextIndex].result;
+  const from = choreo.viewpoint;
+  const to = mapChoreo[nextIndex].viewpoint;
+  log("Interpolating extent from:", from, "to:", to, "progress:", progress);
   const interpolate = (fromVal, toVal) =>
     fromVal + (toVal - fromVal) * progress;
   const viewpoint = {

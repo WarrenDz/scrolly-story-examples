@@ -128,6 +128,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         break;
       case "extent":
         if (view && payload.extent) {
+          log("extent payload received:", payload.extent);
           view.goTo(payload.extent, { animate: true, duration: 250 });
         }
         break;
@@ -207,20 +208,8 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     // // Viewpoint/extent
     if (mapChoreo.viewpoint) {
       const viewpoint = mapChoreo.viewpoint;
-      // log("Setting viewpoint:", viewpoint);
-      // view.goTo(viewpoint, { animate: true, duration: 2500 });
-      // Navigate to the viewpoint after the view is ready
-      log("Navigating to viewpoint...");
-      const extent = new Extent({
-        xmin: -8195493.916410449,
-        ymin: 1037891.5647293258,
-        xmax: -7757662.618393171,
-        ymax: 1316733.8439135144,
-        spatialReference: { wkid: 102100 },
-      });
-      view.goTo(extent).catch((error) => {
-        console.error("goTo error:", error);
-      });
+      log("Setting viewpoint:", viewpoint);
+      view.goTo(viewpoint, { animate: true, duration: 2500 });
     }
 
     // // Time slider
