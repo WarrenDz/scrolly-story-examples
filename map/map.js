@@ -122,12 +122,12 @@ function setupHashListener() {
 function processHash() {
   const hashIndex = parseInt(window.location.hash.substring(1), 10);
 
-  if (isNaN(hashIndex) || !routeSegments[hashIndex]) {
+  if (isNaN(hashIndex) || !mapChoreography[hashIndex]) {
     console.log("No valid hash index found.");
     return;
   }
 
-  const camera = routeSegments[hashIndex].result;
+  const camera = mapChoreography[hashIndex].result;
   view.goTo({
     position: { x: camera.x, y: camera.y, z: camera.z },
     tilt: camera.tilt,
