@@ -71,7 +71,7 @@ const createIframeSrcObserver = (iframe) => {
     const parts = newSrc.split("#");
     const slideNumber = parseInt(parts.length > 1 ? parts.pop() : "0", 10);
     currentSlide = isNaN(slideNumber) ? 0 : slideNumber;
-    console.log("Updated current slide:", currentSlide);
+    log("Updated current slide:", currentSlide);
   });
 };
 
@@ -87,13 +87,13 @@ function setupDockingObserver() {
       if (currentlyDocked && !isDocked) {
         isDocked = true;
         const currentScroll = window.scrollY;
-        console.log(currentScroll, scrollDirection);
+        log(currentScroll, scrollDirection);
 
         if (scrollDirection === "down") {
           dockStartScroll = currentScroll;
         }
 
-        console.log("Docked: Starting scroll tracking at", dockStartScroll);
+        log("Docked: Starting scroll tracking at", dockStartScroll);
       }
 
       if (!currentlyDocked && isDocked) {
@@ -103,7 +103,7 @@ function setupDockingObserver() {
 
     observer.observe(target, { attributes: true, attributeFilter: ["class"] });
 
-    console.log("Docking observer attached.");
+    log("Docking observer attached.");
   });
 }
 
@@ -116,7 +116,7 @@ function watchForIframeForever() {
       const observer = new MutationObserver(() => {
         const iframe = root.querySelector("iframe");
         if (iframe && !iframe.dataset.observed) {
-          console.log(
+          log(
             "Frame (re)found under ${rootSelector} attaching observer."
           );
           iframe.dataset.observed = "true";
@@ -132,7 +132,7 @@ function watchForIframeForever() {
       });
 
       observer.observe(root, { childList: true, subtree: true });
-      console.log("Watching ${rootSelector} for iframe (re)insertion.");
+      log("Watching ${rootSelector} for iframe (re)insertion.");
     } // (root)=>
   );
 }
@@ -153,7 +153,7 @@ function getPanelProgress(panels, currentSlide, scrollY) {
 // Sets up a scroll listener that tracks the user's scroll position and updates the current slide's progress.
 function setupScrollListener(onProgress) {
   window.addEventListener("scroll", () => {
-    console.log("Scroll event fired"); // Add this line
+    log("Scroll event fired"); // Add this line
     const currentScroll = window.scrollY;
     scrollDirection =
       currentScroll > lastScrollY
@@ -236,7 +236,7 @@ const interpolators = [interpolateMapExtent];
 
 // Generic interpolation runner
 function runInterpolations(interpolators, progress, slide) {
-  console.log("runInterpolations called", { progress, slide });
+  log("runInterpolations called", { progress, slide });
   interpolators.forEach((fn) => {
     if (typeof fn === "function") {
       fn(progress, slide);
