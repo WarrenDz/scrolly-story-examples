@@ -71,16 +71,6 @@ const createIframeSrcObserver = (iframe) => {
 
 // --- Main logic ---
 
-// Set up observers and listeners for docking, iframe changes, and scroll events.
-async function initialize() {
-  // Load the map choreography data
-  const response = await fetch("../public/mapChoreography.json");
-  mapChoreo = await response.json();
-  setupDockingObserver();
-  watchForIframeForever();
-  setupScrollListener();
-}
-
 // Sets up a scroll listener to track the scroll direction and current scroll position.
 // This is used to determine when the user scrolls down or up, which can affect the docking state.
 function setupDockingObserver() {
@@ -246,4 +236,18 @@ function interpolateMapExtent(progress, slide) {
 // Register all interpolation functions you want to run
 const interpolators = [interpolateMapExtent];
 
+// Set up observers and listeners for docking, iframe changes, and scroll events.
+async function initialize() {
+  // Load the map choreography data
+  const response = await fetch("../public/mapChoreography.json");
+  mapChoreo = await response.json();
+  setupDockingObserver();
+  watchForIframeForever();
+  setupScrollListener();
+
+  // Call interpolations on scroll progress
+  setupScrollListener((progress, slide) => {
+    runInterpolations(interpolators, progress, slide);
+  });
+}
 initialize();
