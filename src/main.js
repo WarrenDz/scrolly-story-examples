@@ -6,6 +6,7 @@
 // -- Ultimately, this would also allow for the js to contain more of the logic, rather than the unique configuration.
 const rootSelector = "#n-wrgjVr";
 const targetSelectorDocked = "${rootSelector} > div > div[class*='jsx-'][class*='container'][class*='main']";
+log("Using root selector:", rootSelector);
 const iframeSelector = "${rootSelector} iframe";
 // Note:
 // docked layout = partial-screen
