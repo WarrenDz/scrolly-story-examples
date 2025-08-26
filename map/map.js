@@ -93,7 +93,25 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
       case "viewpoint":
         if (view && payload.viewpoint) {
           log("Setting viewpoint:", payload.viewpoint);
-          view.goTo(payload.viewpoint, { animate: true, duration: 1000 });
+          const vp = payload.viewpoint;
+          const targetGeometry = {
+            type: "extent",
+            xmin: vp.xmin,
+            ymin: vp.ymin,
+            xmax: vp.xmax,
+            ymax: vp.ymax,
+            spatialReference: vp.targetGeometry.spatialReference
+          };
+          view.goTo({
+            target: targetGeometry,
+            rotation: vp.rotation,
+            scale: vp.scale
+           }, {
+            animate: true,
+            duration: 1000
+           }).catch((error) => {
+            log("Error setting viewpoint:", error);
+          });
         }
         break;
       default:
