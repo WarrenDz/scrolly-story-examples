@@ -185,10 +185,10 @@ function setupScrollListener(onProgress) {
 
 // Example interpolation functions
 function interpolateCamera(progress, slide) {
-  const choreo = mapChoreo[slide];
-  const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
+  const choreo = mapChoreography[slide];
+  const nextIndex = Math.min(slide + 1, mapChoreography.length - 1);
   const from = choreo.result;
-  const to = mapChoreo[nextIndex].result;
+  const to = mapChoreography[nextIndex].result;
   const interpolate = (fromVal, toVal) =>
     fromVal + (toVal - fromVal) * progress;
   const camera = {
@@ -214,11 +214,11 @@ function interpolateTimeSlider(progress, slide) {
 
 // Function to interpolate  between map extents
 function interpolateMapExtent(progress, slide) {
-  const choreo = mapChoreo[slide];
-  const nextIndex = Math.min(slide + 1, mapChoreo.length - 1);
+  const choreo = mapChoreography[slide];
+  const nextIndex = Math.min(slide + 1, mapChoreography.length - 1);
   const from = choreo.viewpoint;
   log("From viewpoint:", from);
-  const to = mapChoreo[nextIndex].viewpoint;
+  const to = mapChoreography[nextIndex].viewpoint;
   log("Interpolating extent from:", from, "to:", to, "progress:", progress);
   const interpolate = (fromVal, toVal) =>
     fromVal + (toVal - fromVal) * progress;
@@ -255,7 +255,7 @@ function runInterpolations(interpolators, progress, slide) {
 async function initialize() {
   // Load the map choreography data
   const response = await fetch("./public/mapChoreography.json");
-  mapChoreo = await response.json();
+  mapChoreography = await response.json();
   setupDockingObserver();
   watchForIframeForever();
 
