@@ -5,15 +5,11 @@
 // -- This would facilitate choreography sequences spread across multiple sidecars.
 // -- Ultimately, this would also allow for the js to contain more of the logic, rather than the unique configuration.
 const rootSelector = "#n-wrgjVr";
-
-// const targetSelectorDocked =
-//   "#n-wrgjVr > div > div[class*='jsx-'][class*='container'][class*='partial-screen'][class*='main']";
-// const iframeSelector = "#n-wrgjVr iframe";
-
-const targetSelectorDocked =
-  "#n-wrgjVr > div > div.jsx-2592556314.jsx-1282213000.container.partial-screen.main";
-const iframeSelector =
-  "#n-wrgjVr > div > div.jsx-2592556314.jsx-1282213000.container.partial-screen.docked.show-shadow.main > div > div > div > figure > div > div > div > iframe";
+const targetSelectorDocked = "${rootSelector} > div > div[class*='jsx-'][class*='container'][class*='main']";
+const iframeSelector = "${rootSelector} iframe";
+// Note:
+// docked layout = partial-screen
+// floating layout = full-screen
 
 // --- Shared state ---
 // This file contains shared state variables used across the scroll-driven story map
