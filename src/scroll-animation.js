@@ -126,11 +126,21 @@ function watchForIframeForever() {
         const iframe = root.querySelector("iframe");
         if (iframe && !iframe.dataset.observed) {
           log(
-            "Frame (re)found under ${rootSelector} attaching observer."
+            `Frame (re)found under ${rootSelector} attaching observer.`
           );
           iframe.dataset.observed = "true";
           // Default to slide 0 in case src isn't immediately populated
           currentSlide = 0;
+
+          // Send postMessage to inform iframe it's embedded
+          iframe.contentWindow.postMessage(
+            {
+              source: "storymap-controller",
+              payload: { isEmbedded: true }
+            },
+            "*"
+          );
+
           // Watch for future src changes
           const srcObserver = createIframeSrcObserver(iframe);
           srcObserver.observe(iframe, {

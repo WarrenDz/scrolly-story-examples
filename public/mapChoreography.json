@@ -15,8 +15,8 @@
       }
     },
     "layerVisibility": {
-      "layersOn": [],
-      "layersOff": ["Osprey Points Feature"]
+      "layersOn": ["Osprey Points Feature"],
+      "layersOff": []
     },
     "trackRenderer": {
       "trackLayerName": "Osprey Points Feature",
@@ -66,7 +66,13 @@
               }
             }
           }
-        }
+        },
+    "timeSlider": {
+      "timeSliderStart": "2016-08-15T00:00:00Z",
+      "timeSliderEnd": "2016-11-21T00:00:00Z",
+      "timeSliderUnit": "days",
+      "timeSliderStep": 5
+    }
   },
   {
     "viewpoint": {

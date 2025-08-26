@@ -8,6 +8,7 @@ function log(...args) {
   }
 }
 let mapChoreography;
+let isEmbedded = false; // Flag to indicate if the map is viewed in an embedded context
 
 // Define the map and bookmarks components
 const mapElement = document.querySelector("arcgis-map");
@@ -32,8 +33,8 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
   // Access the layers within the map
   const mapLayers = map.layers;
 
-  // Disable map navigation
-  if (DEBUG) {
+  // If not debug disable mouse wheel and drag events to prevent zooming and panning
+  if (!DEBUG) {
     view.on("mouse-wheel", (event) => {
       event.stopPropagation();
     });
@@ -52,6 +53,13 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     if (event.data.source !== "storymap-controller") return;
 
     const payload = event.data.payload;
+
+    // Check for isEmbedded flag
+    if (payload.isEmbedded) {
+      log("This map is being viewed in an embedded storymap.");
+      // You can set a variable or trigger embedded-specific logic here
+      isEmbedded = true;
+    }
 
     // Use a 'type' property to distinguish what to interpolate
     switch (payload.type) {
@@ -91,6 +99,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
   });
 
   //Hash change listener
+  // Will trigger the map to update based on the current hash in the URL
   window.addEventListener("hashchange", function () {
     // Code to execute when the hash changes
     log("Hash changed to: " + window.location.hash);
@@ -108,7 +117,6 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     }
 
     const mapChoreo = mapChoreography[hashIndex];
-
 
     // Layer visibility
     // Function to toggle the visibility of a list of layer names
@@ -135,33 +143,49 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     toggleLayerVisibility(layersOn, true); // Turn on specified layers
     toggleLayerVisibility(layersOff, false); // Turn off specified layers
 
-  
     // Track renderer
     // Apply track renderer if defined in the choreography
-    if (mapChoreo.trackRenderer) {
-      log("Applying track renderer:", mapChoreo.trackRenderer.trackLayerName);
-      const trackRenderer = mapChoreo.trackRenderer;
-      let trackLayer = mapLayers.find((layer) => layer.title === trackRenderer.trackLayerName);
-      if (trackLayer) {
-        // these are an attempt to do a hard reset on the renderer when we switch hashes
-        map.remove(trackLayer);
-        trackLayer = trackLayer.clone();
-        map.add(trackLayer);
-        //
-        log("Found track layer named:", trackLayer.title);
-        const trackStartField = trackLayer.timeInfo.startField;
-        trackLayer.visible = true; // Make the layer visible
-        trackLayer.timeInfo = {
-          startField: trackStartField,
-          trackIdField: trackLayerField,
-          interval: {
-            unit: choreographyMapping[hash].timeSliderUnit,
-            value: choreographyMapping[hash].timeSliderStep
-          }
-        };
-        // Apply renderer from choreography data
-        trackLayer.trackInfo = trackRenderer.trackInfo
-        };
+    // This requires trackRenderer and timeSlider to be defined in the choreography data
+    async function applyTrackRenderer() {
+      if (mapChoreo.trackRenderer && mapChoreo.timeSlider) {
+        // Assign readable variables from choreography data for clarity
+        const trackRenderer = mapChoreo.trackRenderer;
+        const timeSlider = mapChoreo.timeSlider;
+        const trackLayerField = trackRenderer.trackFieldName;
+        const trackTimeSliderUnit = timeSlider.timeSliderUnit;
+        const trackTimeSliderStep = timeSlider.timeSliderStep;
+        let trackLayer = mapLayers.find(
+          (layer) => layer.title === trackRenderer.trackLayerName
+        );
+        if (trackLayer) {
+          // these are an attempt to do a hard reset on the renderer when we switch hashes
+          map.remove(trackLayer);
+          trackLayer = trackLayer.clone();
+          map.add(trackLayer);
+          //
+          log(
+            "Applying track renderer:",
+            mapChoreo.trackRenderer.trackLayerName
+          );
+          await trackLayer.when(); // Wait for the layer to load
+          const trackStartField = trackLayer.timeInfo.startField;
+          trackLayer.visible = true; // Make the layer visible
+          trackLayer.timeInfo = {
+            startField: trackStartField,
+            trackIdField: trackLayerField,
+            interval: {
+              unit: trackTimeSliderUnit,
+              value: trackTimeSliderStep,
+            },
+          };
+          // Apply renderer from choreography data
+          trackLayer.trackInfo = trackRenderer.trackInfo;
+        }
+      } else if (!mapChoreo.timeSlider) {
+        log("No timeSlider configuration found in choreography.");
+      }
+    }
+    applyTrackRenderer();
 
     // Camera viewpoint
     // if (mapChoreo.camera) {
@@ -175,15 +199,50 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
       view.goTo(viewpoint, { animate: true, duration: 2500 });
     }
 
-    // // Time slider
-    // if (mapChoreo.timeRange && timeSlider) {
-    //   timeSlider.setRange(mapChoreo.timeRange);
-    // }
-    
+    // Time slider
+    function configureTimeSlider() {
+      // Requires timeSlider component and timeSlider configuration in choreography
+      if (
+        timeSlider &&
+        mapChoreo.timeSlider &&
+        mapChoreo.timeSlider.timeSliderStart &&
+        mapChoreo.timeSlider.timeSliderEnd
+      ) {
+        const timeStart = mapChoreo.timeSlider.timeSliderStart;
+        const timeEnd = mapChoreo.timeSlider.timeSliderEnd;
+        const timeUnit = mapChoreo.timeSlider.timeSliderUnit;
+        const timeStep = mapChoreo.timeSlider.timeSliderStep;
+        // Configure the slider full extent with the start and end times from choreography
+        const startFrame = new Date(timeStart);
+        const endFrame = new Date(timeEnd);
+        timeSlider.fullTimeExtent = {start: startFrame, end: endFrame};
+        log("Configuring time slider:", {
+          start: startFrame,
+          end: endFrame,
+          timeUnit: timeUnit,
+          timeStep: timeStep,
+        });
+        timeSlider.timeExtent = {start: null, end: startFrame};
+        // Set the time slider interval based on choreography
+        timeSlider.stops = {
+          interval: {
+            value: timeStep,
+            unit: timeUnit
+          }
+        };
+
+        // Start the time slider if not already playing and if outside script embed story
+        if (timeSlider.state === "ready" && !isEmbedded) {
+          timeSlider.play();
+        }
+      } else if (!timeSlider) {
+        log("No timeSlider component found.");
+      } else {
+        log("No timeSlider configuration found in choreography.");
+      }
+    }
+    configureTimeSlider();
   }
-}
   // Initial hash processing
   processHash();
 });
-
-
