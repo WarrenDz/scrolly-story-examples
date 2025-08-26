@@ -26,6 +26,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
 
   // Access the MapView from the arcgis-map component
   const view = mapElement.view;
+  const map = view.map;
 
   // Access the layers within the map
   const mapLayers = map.layers;
@@ -76,54 +77,14 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
           timeSlider.setPosition(payload.slide, payload.progress);
         }
         break;
-      case "extent":
-        if (view && payload.extent) {
-          log("extent payload received:", payload.extent);
-          view.goTo(payload.extent, { animate: true, duration: 1000 });
-        }
-        break;
       case "viewpoint":
         if (view && payload.viewpoint) {
           view.goTo(payload.viewpoint, { animate: true, duration: 1000 });
         }
         break;
-      case "bookmark":
-        // Implement bookmark logic here
-        if (choreographyMapping[hash]) {
-          // Set the initial map extent by the bookmarkStart
-          const bookmarks = view.map.bookmarks; // Get the bookmarks array from the WebMap
-          const targetBookmark = bookmarks.find((b) => b.name === bookmarkName);
-          // Find the bookmark by name
-          // If the bookmark exists, navigate to it
-          if (targetBookmark) {
-            adjustMapPadding(view); // Ensure padding is set before navigating
-            const bookmarkTarget = targetBookmark.viewpoint;
-            view.goTo(bookmarkTarget, { duration: 2000 });
-          } else {
-            console.error(`Bookmark "${bookmarkName}" not found!`);
-          }
-        }
-        break;
       default:
         // Handle unknown types or legacy camera payloads
-        if (payload.x && payload.y && payload.z) {
-          view.goTo(
-            {
-              position: {
-                x: payload.x,
-                y: payload.y,
-                z: payload.z,
-              },
-              tilt: payload.tilt,
-              heading: payload.heading,
-              fov: payload.fov || 100,
-            },
-            {
-              animate: true,
-              duration: 250,
-            }
-          );
-        }
+        log("Unknown payload type:", payload.type);
         break;
     }
   });
@@ -147,12 +108,39 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
 
     const mapChoreo = mapChoreography[hashIndex];
 
-    // // Camera viewpoint
+    // Track renderer
+    // Apply track renderer if defined in the choreography
+    if (mapChoreo.trackRenderer) {
+      log("Applying track renderer:", mapChoreo.trackRenderer.trackLayerName);
+      const trackRenderer = mapChoreo.trackRenderer;
+      const trackLayer = mapLayers.find((layer) => layer.title === trackRenderer.trackLayerName);
+      if (trackLayer) {
+        // these are an attempt to do a hard reset on the renderer when we switch hashes
+        map.remove(trackLayer);
+        trackLayer = trackLayer.clone();
+        map.add(trackLayer);
+        //
+        log("Found track layer named:", trackLayer.title);
+        const trackStartField = trackLayer.timeInfo.startField;
+        trackLayer.visible = true; // Make the layer visible
+        trackLayer.timeInfo = {
+          startField: trackStartField,
+          trackIdField: trackLayerField,
+          interval: {
+            unit: choreographyMapping[hash].timeSliderUnit,
+            value: choreographyMapping[hash].timeSliderStep
+          }
+        };
+        // Apply renderer from choreography data
+        trackLayer.trackInfo = trackRenderer.trackInfo
+        };
+
+    // Camera viewpoint
     // if (mapChoreo.camera) {
     //   /// Do stuff here
     // }
 
-    // // Viewpoint/extent
+    // Viewpoint/extent
     if (mapChoreo.viewpoint) {
       const viewpoint = mapChoreo.viewpoint;
       log("Setting viewpoint:", viewpoint);
@@ -162,12 +150,6 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     // // Time slider
     // if (mapChoreo.timeRange && timeSlider) {
     //   timeSlider.setRange(mapChoreo.timeRange);
-    // }
-
-    // // Bookmarks
-    // if (mapChoreo.bookmark) {
-    //   // Example: view.goToBookmark(mapChoreo.bookmark);
-    //   // Implement your bookmark logic here
     // }
 
     // Layer visibility
@@ -195,8 +177,9 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     toggleLayerVisibility(layersOn, true); // Turn on specified layers
     toggleLayerVisibility(layersOff, false); // Turn off specified layers
     log("Layer visibility updated.");
+    
   }
 
   // Initial hash processing
   processHash();
-});
+}});

@@ -17,7 +17,56 @@
     "layerVisibility": {
       "layersOn": [],
       "layersOff": ["Osprey Points Feature"]
-    }
+    },
+    "trackRenderer": {
+      "trackLayerName": "Osprey Points Feature",
+      "trackFieldName": "tag_local_identifier",
+      "trackInfo": {
+            "enabled": true,
+            "timeField": "startTimeField",
+            "latestObservations": {
+              "visible": true,
+              "renderer": {
+                "type": "simple",
+                "symbol": {
+                  "type": "simple-marker",
+                  "style": "circle",
+                  "color": "Yellow",
+                  "size": 15,
+                  "outline": {
+                    "color": "black",
+                    "width": 2
+                  }
+                }
+              }
+            },
+            "previousObservations": {
+              "enabled": true,
+              "visible": true,
+              "renderer": {
+                "type": "simple",
+                "symbol": {
+                  "type": "simple-marker",
+                  "style": "circle",
+                  "color": "white",
+                  "size": 2.5
+                }
+              }
+            },
+            "trackLines": {
+              "visible": true,
+              "enabled": true,
+              "renderer": {
+                "type": "simple",
+                "symbol": {
+                  "type": "simple-line",
+                  "color": "Orange",
+                  "width": 4
+                }
+              }
+            }
+          }
+        }
   },
   {
     "viewpoint": {
