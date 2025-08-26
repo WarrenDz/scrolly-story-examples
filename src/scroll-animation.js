@@ -15,8 +15,8 @@ function log(...args) {
 // -- This would facilitate choreography sequences spread across multiple sidecars.
 // -- Ultimately, this would also allow for the js to contain more of the logic, rather than the unique configuration.
 const rootSelector = "#n-wrgjVr";
-const targetSelectorDocked = "${rootSelector} > div > div[class*='jsx-'][class*='container'][class*='main']";
-const iframeSelector = "${rootSelector} iframe";
+const targetSelectorDocked = `${rootSelector} > div > div[class*='jsx-'][class*='container'][class*='main']`;
+const iframeSelector = `${rootSelector} iframe`;
 log("Using rootSelector:", rootSelector);
 log("Using targetSelectorDocked:", targetSelectorDocked);
 log("Using iframeSelector:", iframeSelector);
