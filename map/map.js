@@ -7,6 +7,7 @@ function log(...args) {
     console.log(...args);
   }
 }
+let mapChoreography;
 
 // Define the map and bookmarks components
 const mapElement = document.querySelector("arcgis-map");
@@ -15,7 +16,7 @@ const timeSlider = document.querySelector("arcgis-time-slider");
 // Load the map choreography data from a JSON file
 // This file contains all the configurations for each slide, including camera positions, time slider settings, and layer visibility.
 async function loadMapChoreography() {
-  const response = await fetch("./public/mapChoreography.json");
+  const response = await fetch("../public/mapChoreography.json");
   return await response.json();
 }
 
@@ -108,12 +109,39 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
 
     const mapChoreo = mapChoreography[hashIndex];
 
+
+    // Layer visibility
+    // Function to toggle the visibility of a list of layer names
+    // Takes a list of layer names and a boolean to set visibility on or off based on comparison against layer name in the map
+    function toggleLayerVisibility(layerNames, visibility) {
+      if (mapChoreo.layerVisibility) {
+        if (layerNames && layerNames.length > 0) {
+          mapLayers.forEach((mapLayer) => {
+            if (layerNames.includes(mapLayer.title)) {
+              mapLayer.visible = visibility; // Set visibility based on the argument
+              log(
+                visibility
+                  ? "(+) " + mapLayer.title + " is now visible."
+                  : "(-) " + mapLayer.title + " is now hidden."
+              );
+            }
+          });
+        }
+      }
+    }
+    const layersOn = mapChoreo.layerVisibility.layersOn;
+    const layersOff = mapChoreo.layerVisibility.layersOff;
+
+    toggleLayerVisibility(layersOn, true); // Turn on specified layers
+    toggleLayerVisibility(layersOff, false); // Turn off specified layers
+
+  
     // Track renderer
     // Apply track renderer if defined in the choreography
     if (mapChoreo.trackRenderer) {
       log("Applying track renderer:", mapChoreo.trackRenderer.trackLayerName);
       const trackRenderer = mapChoreo.trackRenderer;
-      const trackLayer = mapLayers.find((layer) => layer.title === trackRenderer.trackLayerName);
+      let trackLayer = mapLayers.find((layer) => layer.title === trackRenderer.trackLayerName);
       if (trackLayer) {
         // these are an attempt to do a hard reset on the renderer when we switch hashes
         map.remove(trackLayer);
@@ -151,35 +179,11 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     // if (mapChoreo.timeRange && timeSlider) {
     //   timeSlider.setRange(mapChoreo.timeRange);
     // }
-
-    // Layer visibility
-    // Function to toggle the visibility of a list of layer names
-    // Takes a list of layer names and a boolean to set visibility on or off based on comparison against layer name in the map
-    function toggleLayerVisibility(layers, visibility) {
-      if (mapChoreo.layerVisibility) {
-        if (layers && layers.length > 0) {
-          mapLayers.forEach((mapLayers) => {
-            if (layers.includes(mapLayers.title)) {
-              mapLayers.visible = visibility; // Set visibility based on the argument
-              log(
-                visibility
-                  ? "(+) " + layer.title + " is now visible."
-                  : "(-) " + layer.title + " is now hidden."
-              );
-            }
-          });
-        }
-      }
-    }
-    const layersOn = mapChoreo.layerVisibility.layersOn;
-    const layersOff = mapChoreo.layerVisibility.layersOff;
-
-    toggleLayerVisibility(layersOn, true); // Turn on specified layers
-    toggleLayerVisibility(layersOff, false); // Turn off specified layers
-    log("Layer visibility updated.");
     
   }
-
+}
   // Initial hash processing
   processHash();
-}});
+});
+
+
