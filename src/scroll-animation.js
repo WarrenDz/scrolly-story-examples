@@ -259,7 +259,7 @@ function interpolateTimeSlider(progress, slide) {
     interpolate = Math.round(interpolate / msPerStep) * msPerStep;
   }
 
-  const timepoint = new Date(interpolate(from, to)).toISOString();
+  const timepoint = new Date(interpolate).toISOString();
   const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: { type: "timeSlider", timepoint } },
