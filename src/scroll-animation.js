@@ -1,3 +1,13 @@
+// Set DEBUG to true to enable debug logging
+const DEBUG = true;
+
+function log(...args) {
+  if (DEBUG) {
+    console.log(...args);
+  }
+}
+
+
 // Node selectors for the story map
 // These selectors are used to identify the main container and iframe within the story map.
 // Can these selectors be made more dynamic?
