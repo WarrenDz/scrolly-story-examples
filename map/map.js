@@ -27,6 +27,9 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
   // Access the MapView from the arcgis-map component
   const view = mapElement.view;
 
+  // Access the layers within the map
+  const mapLayers = map.layers;
+
   // Disable map navigation
   if (DEBUG) {
     view.on("mouse-wheel", (event) => {
@@ -132,9 +135,6 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     processHash();
   });
 
-  // Initial hash processing
-  processHash();
-
   // Function to process the current hash and update the map accordingly
   // This function handles map choreography when the story is viewed outside of the embedded iframe context
   function processHash() {
@@ -170,10 +170,33 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     //   // Implement your bookmark logic here
     // }
 
-    // // Layers
-    // if (mapChoreo.layers) {
-    //   // Example: updateLayerVisibility(mapChoreo.layers);
-    //   // Implement your layer logic here
-    // }
+    // Layer visibility
+    // Function to toggle the visibility of a list of layer names
+    // Takes a list of layer names and a boolean to set visibility on or off based on comparison against layer name in the map
+    function toggleLayerVisibility(layers, visibility) {
+      if (mapChoreo.layerVisibility) {
+        if (layers && layers.length > 0) {
+          mapLayers.forEach((mapLayers) => {
+            if (layers.includes(mapLayers.title)) {
+              mapLayers.visible = visibility; // Set visibility based on the argument
+              log(
+                visibility
+                  ? "(+) " + layer.title + " is now visible."
+                  : "(-) " + layer.title + " is now hidden."
+              );
+            }
+          });
+        }
+      }
+    }
+    const layersOn = mapChoreo.layerVisibility.layersOn;
+    const layersOff = mapChoreo.layerVisibility.layersOff;
+
+    toggleLayerVisibility(layersOn, true); // Turn on specified layers
+    toggleLayerVisibility(layersOff, false); // Turn off specified layers
+    log("Layer visibility updated.");
   }
+
+  // Initial hash processing
+  processHash();
 });

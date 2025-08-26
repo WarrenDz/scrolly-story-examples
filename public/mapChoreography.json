@@ -13,6 +13,10 @@
         "xmax": -9043156.673521623,
         "ymax": 5272545.927555308
       }
+    },
+    "layerVisibility": {
+      "layersOn": [],
+      "layersOff": ["Osprey Points Feature"]
     }
   },
   {
@@ -29,6 +33,10 @@
         "xmax": -5309733.346361135,
         "ymax": 5402393.329354744
       }
+    },
+    "layerVisibility": {
+      "layersOn": ["Osprey Points Feature"],
+      "layersOff": []
     }
   },
   {
@@ -45,6 +53,10 @@
         "xmax": -7757662.618393171,
         "ymax": 1316733.8439135144
       }
-    }
+    },
+    "layerVisibility": {
+      "layersOn": [],
+      "layersOff": ["Osprey Points Feature"]
+    }    
   }
 ]
