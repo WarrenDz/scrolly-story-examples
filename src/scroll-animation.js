@@ -141,7 +141,7 @@ function watchForIframeForever() {
       });
 
       observer.observe(root, { childList: true, subtree: true });
-      log("Watching ${rootSelector} for iframe (re)insertion.");
+      log(`Watching ${rootSelector} for iframe (re)insertion.`);
     } // (root)=>
   );
 }
@@ -234,6 +234,7 @@ function interpolateMapExtent(progress, slide) {
       ymax: interpolate(from.ymax, to.ymax),
     },
   };
+  const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: { type: "viewpoint", viewpoint } },
     "*"
