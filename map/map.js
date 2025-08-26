@@ -255,7 +255,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         };
 
         // Start the time slider if not already playing and if outside script embed story
-        if (timeSlider.state === "ready" && !isEmbedded) {
+        if (timeSlider.state === "ready" && isEmbedded === false) {
           timeSlider.play();
         }
       } else if (!timeSlider) {

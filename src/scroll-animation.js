@@ -223,8 +223,8 @@ function interpolateCamera(progress, slide) {
 // Add more interpolation functions as needed
 function interpolateTimeSlider(progress, slide) {
   const choreo = mapChoreography[slide];
-  const from = new Date(choreo.timeSlider.timeSliderStart).getTime();
-  const to = new Date(choreo.timeSlider.timeSliderEnd).getTime();
+  const from = new Date(choreo.timeSlider.timeSliderStart);
+  const to = new Date(choreo.timeSlider.timeSliderEnd);
   const step = choreo.timeSlider.timeSliderStep;
   const unit = choreo.timeSlider.timeSliderUnit;
   let interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
@@ -260,6 +260,7 @@ function interpolateTimeSlider(progress, slide) {
   }
 
   const timepoint = new Date(interpolate).toISOString();
+  log("Interpolated timepoint:", timepoint);
   const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: { type: "timeSlider", timepoint } },
