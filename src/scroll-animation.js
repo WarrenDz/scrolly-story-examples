@@ -213,6 +213,7 @@ function interpolateCamera(progress, slide) {
     heading: interpolate(from.heading, to.heading),
     fov: to.fov || 100,
   };
+  const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: camera },
     "*"
@@ -258,9 +259,9 @@ function interpolateTimeSlider(progress, slide) {
   }
 
   const timepoint = new Date(interpolate(from, to)).toISOString();
-
+  const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
-    { source: "storymap-controller", payload: { type: "timeslider", timepoint } },
+    { source: "storymap-controller", payload: { type: "timeSlider", timepoint } },
     "*"
   );
 }
@@ -285,6 +286,7 @@ function interpolateMapExtent(progress, slide) {
       ymax: interpolate(from.ymax, to.ymax),
     },
   };
+  const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: { type: "viewpoint", viewpoint } },
     "*"
