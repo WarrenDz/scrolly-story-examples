@@ -292,11 +292,12 @@ function interpolateMapExtent(progress, slide) {
 }
 
 // Register all interpolation functions you want to run
-const interpolators = [interpolateMapExtent];
+const interpolators = [interpolateMapExtent, interpolateTimeSlider];
 
 // Generic interpolation runner
 function runInterpolations(interpolators, progress, slide) {
-  log("runInterpolations called", { progress, slide });
+  const pct = (progress * 100).toFixed(2) + "%";
+  log("runInterpolations called", { pct, slide });
   interpolators.forEach((fn) => {
     if (typeof fn === "function") {
       fn(progress, slide);
