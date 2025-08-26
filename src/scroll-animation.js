@@ -116,7 +116,9 @@ function setupDockingObserver() {
   });
 }
 
+let iframe = null
 function watchForIframeForever() {
+  iframe = document.querySelector(iframeSelector);
   // This selector should match the root element where the iframe is expected to be found.
   // rootSelector gets used here
   waitForElement(
@@ -211,7 +213,6 @@ function interpolateCamera(progress, slide) {
     heading: interpolate(from.heading, to.heading),
     fov: to.fov || 100,
   };
-  const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: camera },
     "*"
@@ -220,8 +221,48 @@ function interpolateCamera(progress, slide) {
 
 // Add more interpolation functions as needed
 function interpolateTimeSlider(progress, slide) {
-  // Example: update time slider position
-  // timeSlider.setPosition(slide, progress);
+  const choreo = mapChoreography[slide];
+  const from = new Date(choreo.timeSlider.timeSliderStart).getTime();
+  const to = new Date(choreo.timeSlider.timeSliderEnd).getTime();
+  const step = choreo.timeSlider.timeSliderStep;
+  const unit = choreo.timeSlider.timeSliderUnit;
+  let interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
+
+  // Optional: Snap to step/unit
+  if (step && unit) {
+    let msPerStep;
+    switch (unit) {
+      case "day":
+        msPerStep = step * 24 * 60 * 60 * 1000;
+        break;
+      case "hour":
+        msPerStep = step * 60 * 60 * 1000;
+        break;
+      case "minute":
+        msPerStep = step * 60 * 1000;
+        break;
+      case "second":
+        msPerStep = step * 1000;
+        break;
+      case "month":
+        // For months, you may want to use a date library for accuracy
+        msPerStep = step * 30 * 24 * 60 * 60 * 1000;
+        break;
+      case "year":
+        msPerStep = step * 365 * 24 * 60 * 60 * 1000;
+        break;
+      default:
+        msPerStep = step;
+    }
+    interpolate = Math.round(interpolate / msPerStep) * msPerStep;
+  }
+
+  const timepoint = new Date(interpolate(from, to)).toISOString();
+
+  iframe.contentWindow.postMessage(
+    { source: "storymap-controller", payload: { type: "timeslider", timepoint } },
+    "*"
+  );
 }
 
 // Function to interpolate  between map extents
@@ -244,7 +285,6 @@ function interpolateMapExtent(progress, slide) {
       ymax: interpolate(from.ymax, to.ymax),
     },
   };
-  const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: { type: "viewpoint", viewpoint } },
     "*"
