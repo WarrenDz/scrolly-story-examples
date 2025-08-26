@@ -11,64 +11,11 @@ function log(...args) {
 // Define the map and bookmarks components
 const mapElement = document.querySelector("arcgis-map");
 const timeSlider = document.querySelector("arcgis-time-slider");
-const resetButton = document.querySelector("#reset-button");
-
-// Hardcoding this for now
-let mapChoreography = [
-  {
-    viewpoint: {
-      rotation: 0,
-      scale: 1155581.108577,
-      targetGeometry: {
-        spatialReference: {
-          latestWkid: 3857,
-          wkid: 102100,
-        },
-        xmin: -9480987.971538901,
-        ymin: 4993703.648371119,
-        xmax: -9043156.673521623,
-        ymax: 5272545.927555308,
-      },
-    },
-  },
-  {
-    viewpoint: {
-      rotation: 0,
-      scale: 18489297.737236,
-      targetGeometry: {
-        spatialReference: {
-          latestWkid: 3857,
-          wkid: 102100,
-        },
-        xmin: -12315034.114639107,
-        ymin: 940916.8624067632,
-        xmax: -5309733.346361135,
-        ymax: 5402393.329354744,
-      },
-    },
-  },
-  {
-    viewpoint: {
-      rotation: 0,
-      scale: 1155581.108577,
-      targetGeometry: {
-        spatialReference: {
-          latestWkid: 3857,
-          wkid: 102100,
-        },
-        xmin: -8195493.916410449,
-        ymin: 1037891.5647293258,
-        xmax: -7757662.618393171,
-        ymax: 1316733.8439135144,
-      },
-    },
-  },
-];
 
 // Load the map choreography data from a JSON file
 // This file contains all the configurations for each slide, including camera positions, time slider settings, and layer visibility.
 async function loadMapChoreography() {
-  const response = await fetch("../public/mapChoreography.json");
+  const response = await fetch("./public/mapChoreography.json");
   return await response.json();
 }
 
