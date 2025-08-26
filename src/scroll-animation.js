@@ -254,7 +254,7 @@ function runInterpolations(interpolators, progress, slide) {
 // Set up observers and listeners for docking, iframe changes, and scroll events.
 async function initialize() {
   // Load the map choreography data
-  const response = await fetch("../public/mapChoreography.json");
+  const response = await fetch("./public/mapChoreography.json");
   mapChoreo = await response.json();
   setupDockingObserver();
   watchForIframeForever();
