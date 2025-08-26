@@ -228,7 +228,8 @@ function interpolateTimeSlider(progress, slide) {
   const step = choreo.timeSlider.timeSliderStep;
   const unit = choreo.timeSlider.timeSliderUnit;
   let interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
-
+  const pct = (progress * 100).toFixed(2) + "%";
+  log("Interpolating time from:", new Date(from), "to:", new Date(to), "progress:", pct);
   // Optional: Snap to step/unit
   if (step && unit) {
     let msPerStep;
@@ -271,9 +272,9 @@ function interpolateMapExtent(progress, slide) {
   const choreo = mapChoreography[slide];
   const nextIndex = Math.min(slide + 1, mapChoreography.length - 1);
   const from = choreo.viewpoint;
-  log("From viewpoint:", from);
   const to = mapChoreography[nextIndex].viewpoint;
-  log("Interpolating extent from:", from, "to:", to, "progress:", progress);
+  const pct = (progress * 100).toFixed(2) + "%";
+  log("Interpolating extent from:", from, "to:", to, "progress:", pct);
   const interpolate = (fromVal, toVal) =>
     fromVal + (toVal - fromVal) * progress;
   const viewpoint = {

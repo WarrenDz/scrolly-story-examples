@@ -83,6 +83,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         break;
       case "timeSlider":
         if (timeSlider && payload.timepoint) {
+          log("Setting timeSlider to:", payload.timepoint);
           timeSlider.timeExtent = {
             start: null,
             end: new Date(payload.timepoint)
@@ -91,6 +92,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         break;
       case "viewpoint":
         if (view && payload.viewpoint) {
+          log("Setting viewpoint:", payload.viewpoint);
           view.goTo(payload.viewpoint, { animate: true, duration: 1000 });
         }
         break;
