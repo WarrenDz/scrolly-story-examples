@@ -129,12 +129,12 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
       case "extent":
         if (view && payload.extent) {
           log("extent payload received:", payload.extent);
-          view.goTo(payload.extent, { animate: true, duration: 250 });
+          view.goTo(payload.extent, { animate: true, duration: 500 });
         }
         break;
       case "viewpoint":
         if (view && payload.viewpoint) {
-          view.goTo(payload.viewpoint, { animate: true, duration: 2500 });
+          view.goTo(payload.viewpoint, { animate: true, duration: 500 });
         }
         break;
       case "bookmark":
