@@ -223,46 +223,37 @@ function interpolateCamera(progress, slide) {
 // Add more interpolation functions as needed
 function interpolateTimeSlider(progress, slide) {
   const choreo = mapChoreography[slide];
-  const from = new Date(choreo.timeSlider.timeSliderStart);
-  const to = new Date(choreo.timeSlider.timeSliderEnd);
+  const start = new Date(choreo.timeSlider.timeSliderStart);
+  const end = new Date(choreo.timeSlider.timeSliderEnd);
   const step = choreo.timeSlider.timeSliderStep;
   const unit = choreo.timeSlider.timeSliderUnit;
-  let interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
+  const interpolate = (fromVal, toVal) => fromVal + (toVal - fromVal) * progress;
   const pct = (progress * 100).toFixed(2) + "%";
-  const newDate = interpolate(from.getTime(), to.getTime());
-  log("Interpolating time from:", new Date(from), "to:", new Date(to), "progress:", pct, "result:", new Date(newDate));
+  const interpolatedTime = interpolate(start.getTime(), end.getTime());
+  log("Interpolating time from:", new Date(start), "to:", new Date(end), "progress:", pct, "result:", new Date(interpolatedTime));
+  const unitToMs = {
+    milliseconds: 1,
+    seconds: 1000,
+    minutes: 60 * 1000,
+    hours: 60 * 60 * 1000,
+    days: 24 * 60 * 60 * 1000,
+    weeks: 7 * 24 * 60 * 60 * 1000,
+    months: 30 * 24 * 60 * 60 * 1000, // Approximate
+    years: 365 * 24 * 60 * 60 * 1000 // Approximate
+  };
 
-  // Optional: Snap to step/unit
-  // if (step && unit) {
-  //   let msPerStep;
-  //   switch (unit) {
-  //     case "day":
-  //       msPerStep = step * 24 * 60 * 60 * 1000;
-  //       break;
-  //     case "hour":
-  //       msPerStep = step * 60 * 60 * 1000;
-  //       break;
-  //     case "minute":
-  //       msPerStep = step * 60 * 1000;
-  //       break;
-  //     case "second":
-  //       msPerStep = step * 1000;
-  //       break;
-  //     case "month":
-  //       // For months, you may want to use a date library for accuracy
-  //       msPerStep = step * 30 * 24 * 60 * 60 * 1000;
-  //       break;
-  //     case "year":
-  //       msPerStep = step * 365 * 24 * 60 * 60 * 1000;
-  //       break;
-  //     default:
-  //       msPerStep = step;
-  //   }
-  //   interpolate = Math.round(interpolate / msPerStep) * msPerStep;
-  // }
+  const stepMs = step * (unitToMs[unit] || 0);
+  if (stepMs <= 0) return new Date(Math.min(interpolatedTime, end.getTime()));
 
-  const timepoint = new Date(interpolate);
-  log("Interpolated timepoint:", timepoint);
+  // Snap to step
+  const offset = interpolatedTime - start.getTime();
+  const snappedOffset = Math.ceil(offset / stepMs) * stepMs;
+  const snappedTime = start.getTime() + snappedOffset;
+
+  // Clamp to end
+  const timepoint = Math.min(Math.max(snappedTime, start.getTime()), end.getTime());
+
+  log("Interpolated timepoint:", new Date(timepoint));
   const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
     { source: "storymap-controller", payload: { type: "timeSlider", timepoint } },
