@@ -88,6 +88,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
             start: null,
             end: new Date(payload.timepoint)
           };
+          timeSlider.stop()
         }
         break;
       case "viewpoint":
