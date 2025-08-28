@@ -66,22 +66,15 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
     // Use a 'type' property to distinguish what to interpolate
     switch (payload.type) {
       case "camera":
-        view.goTo(
-          {
-            position: {
-              x: payload.x,
-              y: payload.y,
-              z: payload.z,
-            },
-            tilt: payload.tilt,
-            heading: payload.heading,
-            fov: payload.fov || 100,
-          },
-          {
+        const targetCamera = Viewpoint.fromJSON(payload.camera);
+        log("Setting camera:", targetCamera);
+        view.goTo(targetCamera, {
             animate: true,
-            duration: 250,
-          }
-        );
+            duration: 1000,
+          })
+          .catch((error) => {
+            log("Error setting camera:", error);
+          });
         break;
       case "timeSlider":
         if (timeSlider && payload.timepoint) {
@@ -97,7 +90,8 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         if (view && payload.viewpoint) {
           const targetViewpoint = Viewpoint.fromJSON(payload.viewpoint);
           log("Setting viewpoint:", targetViewpoint);
-          view.goTo(targetViewpoint, {
+          view
+            .goTo(targetViewpoint, {
               animate: true,
               duration: 1000,
             })
