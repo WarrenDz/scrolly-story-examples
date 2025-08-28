@@ -196,8 +196,9 @@ function setupScrollListener(onProgress) {
   });
 }
 
+// --- Interpolators ---
 
-// Example interpolation functions
+// Function to interpolate between camera positions
 function interpolateCamera(progress, slide) {
   const choreo = mapChoreography[slide];
   const nextIndex = Math.min(slide + 1, mapChoreography.length - 1);
@@ -220,7 +221,7 @@ function interpolateCamera(progress, slide) {
   );
 }
 
-// Add more interpolation functions as needed
+// Function to interpolate between time slider values
 function interpolateTimeSlider(progress, slide) {
   const choreo = mapChoreography[slide];
   const start = new Date(choreo.timeSlider.timeSliderStart);
@@ -262,13 +263,11 @@ function interpolateTimeSlider(progress, slide) {
 }
 
 // Function to interpolate  between map extents
-function interpolateMapExtent(progress, slide) {
+function interpolateViewpoint(progress, slide) {
   const choreo = mapChoreography[slide];
   const nextIndex = Math.min(slide + 1, mapChoreography.length - 1);
   const from = choreo.viewpoint;
   const to = mapChoreography[nextIndex].viewpoint;
-  const pct = (progress * 100).toFixed(2) + "%";
-  log("Interpolating extent from:", from, "to:", to, "progress:", pct);
   const interpolate = (fromVal, toVal) =>
     fromVal + (toVal - fromVal) * progress;
   const viewpoint = {
@@ -289,7 +288,7 @@ function interpolateMapExtent(progress, slide) {
 }
 
 // Register all interpolation functions you want to run
-const interpolators = [interpolateMapExtent, interpolateTimeSlider];
+const interpolators = [interpolateViewpoint, interpolateTimeSlider];
 
 // Generic interpolation runner
 function runInterpolations(interpolators, progress, slide) {

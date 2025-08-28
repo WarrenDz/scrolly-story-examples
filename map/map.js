@@ -1,4 +1,6 @@
-import Extent from "https://js.arcgis.com/4.26/@arcgis/core/geometry/Extent.js";
+// Imports
+const Viewpoint = await $arcgis.import("@arcgis/core/Viewpoint.js");
+
 // Set DEBUG to true to enable debug logging
 const DEBUG = true;
 
@@ -94,20 +96,10 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
       case "viewpoint":
         if (view && payload.viewpoint) {
           log("Setting viewpoint:", payload.viewpoint);
-          const vp = payload.viewpoint;
-          const targetGeometry = {
-            type: "extent",
-            xmin: vp.xmin,
-            ymin: vp.ymin,
-            xmax: vp.xmax,
-            ymax: vp.ymax,
-            spatialReference: vp.targetGeometry.spatialReference
-          };
+          targetViewpoint = Viewpoint.fromJSON(payload.viewpoint)
           view.goTo({
-            target: targetGeometry,
-            rotation: vp.rotation,
-            scale: vp.scale
-           }, {
+            targetViewpoint
+          }, {
             animate: true,
             duration: 1000
            }).catch((error) => {
@@ -256,6 +248,7 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         };
 
         // Start the time slider if not already playing and if outside script embed story
+        // *Note: this doesn't seem to work and the timeSlider always starts playing
         if (timeSlider.state === "ready" && isEmbedded === false) {
           timeSlider.play();
         }
