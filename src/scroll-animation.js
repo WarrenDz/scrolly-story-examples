@@ -271,15 +271,15 @@ function interpolateViewpoint(progress, slide) {
   const interpolate = (fromVal, toVal) =>
     fromVal + (toVal - fromVal) * progress;
   const viewpoint = {
-    scale: interpolate(from.scale, to.scale),
     rotation: interpolate(from.rotation, to.rotation),
+    scale: interpolate(from.scale, to.scale),
     targetGeometry: {
+      spatialReference: { latestWkid: from.targetGeometry.spatialReference.latestWkid, wkid: from.targetGeometry.spatialReference.wkid },
       xmin: interpolate(from.targetGeometry.xmin, to.targetGeometry.xmin),
       ymin: interpolate(from.targetGeometry.ymin, to.targetGeometry.ymin),
       xmax: interpolate(from.targetGeometry.xmax, to.targetGeometry.xmax),
-      ymax: interpolate(from.targetGeometry.ymax, to.targetGeometry.ymax),
-      spatialReference: { wkid: from.targetGeometry.spatialReference.wkid }
-    },
+      ymax: interpolate(from.targetGeometry.ymax, to.targetGeometry.ymax)
+    }
   };
   const iframe = document.querySelector(iframeSelector);
   iframe.contentWindow.postMessage(
