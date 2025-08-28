@@ -274,10 +274,10 @@ function interpolateViewpoint(progress, slide) {
     scale: interpolate(from.scale, to.scale),
     rotation: interpolate(from.rotation, to.rotation),
     targetGeometry: {
-      xmin: interpolate(from.xmin, to.xmin),
-      ymin: interpolate(from.ymin, to.ymin),
-      xmax: interpolate(from.xmax, to.xmax),
-      ymax: interpolate(from.ymax, to.ymax),
+      xmin: interpolate(from.targetGeometry.xmin, to.targetGeometry.xmin),
+      ymin: interpolate(from.targetGeometry.ymin, to.targetGeometry.ymin),
+      xmax: interpolate(from.targetGeometry.xmax, to.targetGeometry.xmax),
+      ymax: interpolate(from.targetGeometry.ymax, to.targetGeometry.ymax),
       spatialReference: from.targetGeometry.spatialReference.wkid
     },
   };
