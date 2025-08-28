@@ -278,7 +278,7 @@ function interpolateViewpoint(progress, slide) {
       ymin: interpolate(from.targetGeometry.ymin, to.targetGeometry.ymin),
       xmax: interpolate(from.targetGeometry.xmax, to.targetGeometry.xmax),
       ymax: interpolate(from.targetGeometry.ymax, to.targetGeometry.ymax),
-      spatialReference: from.targetGeometry.spatialReference.wkid
+      spatialReference: { wkid: from.targetGeometry.spatialReference.wkid }
     },
   };
   const iframe = document.querySelector(iframeSelector);
