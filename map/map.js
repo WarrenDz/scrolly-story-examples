@@ -100,8 +100,6 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
           log("calculated viewpoint:", targetViewpoint);
           view.goTo(targetViewpoint).catch((error) => {
             log("Error setting viewpoint:", error)
-            view.goTo(payload.viewpoint);
-            log("...set directly from payload")
           });
         }
         break;
