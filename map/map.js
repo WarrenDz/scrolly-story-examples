@@ -97,12 +97,11 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         if (view && payload.viewpoint) {
           log("Setting viewpoint:", payload.viewpoint);
           const targetViewpoint = Viewpoint.fromJSON(payload.viewpoint)
-          view.goTo(targetViewpoint,
-           {
-            animate: true,
-            duration: 1000
-           }).catch((error) => {
-            log("Error setting viewpoint:", error);
+          log("calculated viewpoint:", targetViewpoint);
+          view.goTo(targetViewpoint).catch((error) => {
+            log("Error setting viewpoint:", error)
+            view.goTo(payload.viewpoint);
+            log("...set directly from payload")
           });
         }
         break;
