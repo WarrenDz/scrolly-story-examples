@@ -88,21 +88,22 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
           log("Setting timeSlider to:", payload.timepoint);
           timeSlider.timeExtent = {
             start: null,
-            end: new Date(payload.timepoint)
+            end: new Date(payload.timepoint),
           };
-          timeSlider.stop()
+          timeSlider.stop();
         }
         break;
       case "viewpoint":
         if (view && payload.viewpoint) {
-          log("Setting viewpoint:", payload.viewpoint);
-          const targetViewpoint = Viewpoint.fromJSON(payload.viewpoint)
-          log("jsonified payload:", targetViewpoint)
-          view.goTo(targetViewpoint).catch((error) => {
-            log("Error setting viewpoint:", error)
-            view.goTo(payload.viewpoint)
-            log("...set from payload")
-          });
+          const targetViewpoint = Viewpoint.fromJSON(payload.viewpoint);
+          log("Setting viewpoint:", targetViewpoint);
+          view.goTo(targetViewpoint, {
+              animate: true,
+              duration: 1000,
+            })
+            .catch((error) => {
+              log("Error setting viewpoint:", error);
+            });
         }
         break;
       default:
@@ -229,20 +230,20 @@ mapElement.addEventListener("arcgisViewReadyChange", async (event) => {
         // Configure the slider full extent with the start and end times from choreography
         const startFrame = new Date(timeStart);
         const endFrame = new Date(timeEnd);
-        timeSlider.fullTimeExtent = {start: startFrame, end: endFrame};
+        timeSlider.fullTimeExtent = { start: startFrame, end: endFrame };
         log("Configuring time slider:", {
           start: startFrame,
           end: endFrame,
           timeUnit: timeUnit,
           timeStep: timeStep,
         });
-        timeSlider.timeExtent = {start: null, end: startFrame};
+        timeSlider.timeExtent = { start: null, end: startFrame };
         // Set the time slider interval based on choreography
         timeSlider.stops = {
           interval: {
             value: timeStep,
-            unit: timeUnit
-          }
+            unit: timeUnit,
+          },
         };
 
         // Start the time slider if not already playing and if outside script embed story
